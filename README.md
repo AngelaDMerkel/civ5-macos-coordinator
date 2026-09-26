@@ -1,59 +1,59 @@
 # Civ V macOS Coordinator
 
-This project brings together the work needed to make Lekmod and Vox Populi
-practical, dependable choices for Civilization V on macOS. **Wir Schaffen DLC**
-provides one place to install a supported product, switch between products,
-and restore the original game. This repository records the exact source
-revisions that are developed and checked together.
+This repository keeps the source needed to build Lekmod, Vox Populi, and
+Wir Schaffen DLC together. It records an exact version of each project so
+developers can reproduce a build or return to an earlier set of versions.
 
-## Philosophy
+## What each component does
 
-Keep each mod's identity and gameplay independent. Share the macOS compatibility
-work that benefits both, make builds reproducible, and give users a clear path
-back to their original installation. Compatibility claims should follow test
-evidence, with remaining limitations stated plainly. Each component retains
-its own history, releases, ownership, and licensing.
-
-## Long-term goals
-
-- Deliver validated native macOS Lekmod and Vox Populi packages through WSDLC.
-- Check coordinated versions in CI, covering build compatibility and eventually
-  installation, switching, UI, save/load, and multiplayer behavior.
-- Expand mod and map compatibility through repeatable tests, while keeping
-  updates and restoration reliable.
-
-## How the repositories fit together
-
-| Submodule | Functional responsibility |
+| Repository | Purpose and value |
 | --- | --- |
-| [`repos/compat`](repos/compat) | Shared macOS compatibility code, ABI contract, build tools, and binary validation |
-| [`repos/lekmod`](repos/lekmod) | Lekmod gameplay, content, and its native GameCore |
-| [`repos/vox-populi`](repos/vox-populi) | Vox Populi gameplay, content, and its native GameCore |
-| [`repos/wsdlc`](repos/wsdlc) | WSDLC package verification, installation, switching, and restoration |
+| [Lekmod](repos/lekmod) | Adds civilizations, balance changes, and multiplayer-focused gameplay. It contains Lekmod's game rules, content, and custom GameCore, including the macOS port. |
+| [Vox Populi](repos/vox-populi) | Reworks Civ V's game systems and AI. It contains VP's own GameCore and content, with a separate macOS port so VP can develop independently of Lekmod. |
+| [macOS compatibility](repos/compat) | Provides the platform functions, data layouts, build tools, and binary checks needed by both ports. A Mac compatibility fix can be shared by both mods instead of being maintained twice. |
+| [Wir Schaffen DLC](repos/wsdlc) | Packages supported mods and maps as DLC for ordinary single-player and multiplayer games. Its GameCore installer checks packages, switches the active mod and matching content, and keeps one original GameCore backup for restoration. |
 
-Git submodules pin exact commits. Lekmod and VP retain their own compatibility
-lockfiles; the coordinator checks that both agree with its shared-code pin and
-that WSDLC recognizes the same ABI. Updating a component does not automatically
-advance the coordinator's tested combination.
+The **GameCore** is the library that runs Civ V's rules and AI. Aspyr's Mac
+version needs a macOS library in place of the Windows DLL supplied by these
+mods. Lekmod and VP each have their own implementation; only one GameCore can
+be active in the game at a time.
 
-## Getting started
+## Shared work
 
-The initial coordinator is a **local development snapshot**. Its shared
-compatibility repository and VP revision must be published before the complete
-workspace can be cloned from GitHub. With the existing repositories together
-in a local directory, initialize a coordinator checkout with:
+The point of sharing this work is that a fix made for one Mac port can help
+the others. Common compatibility fixes, build tools, and tests belong in the
+shared repository, where both Lekmod and VP can use and improve them.
+
+Gameplay changes stay with each mod. Installation work stays in WSDLC. Each
+project keeps its own history, authorship, and license. Useful changes should
+be documented and offered back to the upstream projects, so the benefit is
+not limited to these Mac forks.
+
+## How the coordinator works
+
+The coordinator connects them using Git submodules. Each submodule points to a
+specific commit. Its checks confirm that both mods use the selected compatibility
+revision and that WSDLC expects the same binary interface. Component updates
+are included by changing these pointers and checking the new combination.
+
+## Where the project is heading
+
+The goal is to install and update either Mac GameCore through WSDLC without
+manually replacing game files. Remaining work includes preparing VP's DLC
+package, testing normal gameplay, saves, and multiplayer, and publishing
+GameCore packages that WSDLC can download and verify. Larger and unusually
+shaped maps also need further testing.
+
+## Working with the source
+
+The selected VP commit is still unavailable on GitHub, so a complete checkout
+currently needs the local repositories:
 
 ```sh
 python3 scripts/bootstrap.py --local-root /path/to/existing/repositories
 python3 scripts/check_workspace.py
 ```
 
-The local bootstrap reads committed source and creates separate checkouts;
-uncommitted work in the original repositories stays there. See
-[the workspace guide](docs/workspace.md) for clone, update, testing, and
-publication instructions.
-
-The GameCore target is Aspyr's Intel macOS Civ V host, including execution
-through Rosetta 2 on Apple Silicon. WSDLC itself has arm64 and amd64 builds.
-Passing source checks does not certify gameplay, and this coordinator does
-not launch or modify an installed game.
+See the [workspace guide](docs/workspace.md) for setup, builds, and version updates.
+The GameCores target Aspyr's Intel macOS Steam release and run through Rosetta 2
+on Apple Silicon. WSDLC has separate Apple Silicon and Intel executables.
