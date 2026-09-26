@@ -8,10 +8,10 @@ developers can reproduce a build or return to an earlier set of versions.
 
 | Repository | Purpose and value |
 | --- | --- |
-| [Lekmod](repos/lekmod) | Adds civilizations, balance changes, and multiplayer-focused gameplay. It contains Lekmod's game rules, content, and custom GameCore, including the macOS port. |
-| [Vox Populi](repos/vox-populi) | Reworks Civ V's game systems and AI. It contains VP's own GameCore and content, with a separate macOS port so VP can develop independently of Lekmod. |
-| [macOS compatibility](repos/compat) | Provides the platform functions, data layouts, build tools, and binary checks needed by both ports. A Mac compatibility fix can be shared by both mods instead of being maintained twice. |
-| [Wir Schaffen DLC](repos/wsdlc) | Packages supported mods and maps as DLC for ordinary single-player and multiplayer games. Its GameCore installer checks packages, switches the active mod and matching content, and keeps one original GameCore backup for restoration. |
+| [Lekmod](https://github.com/AngelaDMerkel/Lekmod) | Adds civilizations, balance changes, and multiplayer-focused gameplay. It contains Lekmod's game rules, content, and custom GameCore, including the macOS port. |
+| [Vox Populi](https://github.com/AngelaDMerkel/Community-Patch-DLL-macOS) | Reworks Civ V's game systems and AI. It contains VP's own GameCore and content, with a separate macOS port so VP can develop independently of Lekmod. |
+| [macOS compatibility](https://github.com/AngelaDMerkel/civ5-macos-gamecore-compat) | Provides the platform functions, data layouts, build tools, and binary checks needed by both ports. A Mac compatibility fix can be shared by both mods instead of being maintained twice. |
+| [Wir Schaffen DLC](https://github.com/AngelaDMerkel/Wir-Schaffen-DLC) | Packages supported mods and maps as DLC for ordinary single-player and multiplayer games. Its GameCore installer checks packages, switches the active mod and matching content, and keeps one original GameCore backup for restoration. |
 
 The **GameCore** is the library that runs Civ V's rules and AI. Aspyr's Mac
 version needs a macOS library in place of the Windows DLL supplied by these

@@ -62,9 +62,9 @@ Each build writes its GameCore library and build report to that mod's
 functions, and other properties required by Aspyr's game. The scripts do not
 install the result or start Civ V.
 
-A playable package also needs the mod's matching DLC content. Follow the
-[Lekmod packaging instructions](../repos/lekmod/LEKMOD_DLL/macos/README.md)
-or the [VP packaging script](../repos/vox-populi/macos/package-macos.sh).
+A playable package also needs the mod's matching DLC content. In the checked-out
+workspace, see `repos/lekmod/LEKMOD_DLL/macos/README.md` for Lekmod packaging
+instructions and `repos/vox-populi/macos/package-macos.sh` for VP packaging.
 VP packaging requires a prepared DLC directory; raw SQL and modinfo sources
 are not an installable payload.
 
