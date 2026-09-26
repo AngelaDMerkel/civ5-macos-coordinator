@@ -28,6 +28,9 @@ commit. Replacing it with a branch tip would bypass the recorded version.
 ## Check the selected versions
 
 ```sh
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install ./repos/wsdlc
 export PYTHONDONTWRITEBYTECODE=1
 python3 scripts/check_workspace.py
 python3 -m unittest discover -s tests -v
