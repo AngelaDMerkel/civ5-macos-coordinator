@@ -1,0 +1,12 @@
+[submodule "compat"]
+	path = repos/compat
+	url = https://github.com/AngelaDMerkel/civ5-macos-gamecore-compat.git
+[submodule "lekmod"]
+	path = repos/lekmod
+	url = https://github.com/AngelaDMerkel/Lekmod.git
+[submodule "vox-populi"]
+	path = repos/vox-populi
+	url = https://github.com/AngelaDMerkel/Community-Patch-DLL-macOS.git
+[submodule "wsdlc"]
+	path = repos/wsdlc
+	url = https://github.com/AngelaDMerkel/Wir-Schaffen-DLC.git

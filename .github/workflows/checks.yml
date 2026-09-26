@@ -1,0 +1,67 @@
+name: Check coordinated sources
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      build_gamecores:
+        description: Also compile and ABI-validate both native GameCores
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+env:
+  PYTHONDONTWRITEBYTECODE: '1'
+
+jobs:
+  contracts:
+    name: Pins, ABI contract, and component tests
+    runs-on: macos-15-intel
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - run: python3 scripts/check_workspace.py
+      - run: python3 -m unittest discover -s tests -v
+      - run: python3 -m unittest discover -s repos/compat/tests -v
+      - run: python3 -m unittest discover -s repos/wsdlc/tests -v
+
+  gamecores:
+    name: Build ${{ matrix.product }}
+    if: github.event_name == 'workflow_dispatch' && inputs.build_gamecores
+    needs: contracts
+    runs-on: macos-15-intel
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - product: lekmod
+            script: LEKMOD_DLL/macos/build-macos.sh
+          - product: vox-populi
+            script: macos/build-macos.sh
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          submodules: recursive
+          persist-credentials: false
+      - run: python3 scripts/check_workspace.py
+      - name: Compile and validate without installing or launching the game
+        env:
+          CIV5_COMPAT_SOURCE: ${{ github.workspace }}/repos/compat
+          BUILD_SCRIPT: repos/${{ matrix.product }}/${{ matrix.script }}
+        run: bash "$BUILD_SCRIPT" --jobs 4
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ${{ matrix.product }}-native-build
+          path: |
+            repos/${{ matrix.product }}/build/macos/libCvGameCoreDLL_Expansion2_DLL.dylib
+            repos/${{ matrix.product }}/build/macos/build-report.json
+          if-no-files-found: error
+          retention-days: 7
