@@ -1,4 +1,4 @@
-# Working with the repositories
+# Developer guide
 
 ## Requirements
 
@@ -6,47 +6,24 @@ Use Git and Python 3.10 or newer. Building the GameCores also requires macOS
 and Xcode Command Line Tools. Apple Silicon Macs need Rosetta 2 to run the
 Intel binaries used by the game and some tests.
 
-The coordinator, shared compatibility code, Lekmod, and WSDLC are on GitHub.
-The selected VP commit is still unavailable there. Until it is published,
-use the local repositories to initialize the complete workspace.
-
-## Set up a local workspace
-
-The source directory should contain these repositories:
-
-| Local directory | Location in the coordinator |
-| --- | --- |
-| `civ5-macos-gamecore-compat` | `repos/compat` |
-| `Lekmod` | `repos/lekmod` |
-| `Community-Patch-DLL-macOS` | `repos/vox-populi` |
-| `Civ5ModDlcPacker` | `repos/wsdlc` |
+## Clone and initialize
 
 ```sh
 git clone https://github.com/AngelaDMerkel/civ5-macos-coordinator.git
 cd civ5-macos-coordinator
-python3 scripts/bootstrap.py --local-root /path/to/existing/repositories
+python3 scripts/bootstrap.py
 python3 scripts/check_workspace.py
 ```
 
-The bootstrap copies committed versions into separate checkouts. Uncommitted
-edits stay in the original repositories. If a coordinator checkout already
-contains edits or untracked files, the bootstrap stops so you can save them.
-It records local source paths only in the clone's Git configuration;
-`.gitmodules` keeps the GitHub URLs.
+The bootstrap fetches the recorded commits from the repositories listed in
+[.gitmodules](../.gitmodules). It refuses to update component checkouts
+containing edits or untracked files. Commit or stash those changes before
+updating submodules.
 
-Once the pinned VP commit is published, a new workspace can be downloaded in
-one command:
-
-```sh
-git clone --recurse-submodules https://github.com/AngelaDMerkel/civ5-macos-coordinator.git
-```
-
-To switch an existing workspace from local sources to GitHub, run:
-
-```sh
-git submodule sync --recursive
-python3 scripts/bootstrap.py
-```
+**Known checkout issue:** `repos/vox-populi` pins commit
+`655df2a0253a59c6858535b238c7a095958155ed`, which is unavailable from its
+configured remote. Full initialization and CI checkout are blocked on that
+commit. Replacing it with a branch tip would bypass the recorded version.
 
 ## Check the selected versions
 
@@ -85,9 +62,11 @@ Each build writes its GameCore library and build report to that mod's
 functions, and other properties required by Aspyr's game. The scripts do not
 install the result or start Civ V.
 
-A playable package also needs the mod's matching DLC content. VP's prepared
-DLC package and further in-game testing remain unfinished. WSDLC's automatic
-GameCore download list is empty until suitable packages are published.
+A playable package also needs the mod's matching DLC content. Follow the
+[Lekmod packaging instructions](../repos/lekmod/LEKMOD_DLL/macos/README.md)
+or the [VP packaging script](../repos/vox-populi/macos/package-macos.sh).
+VP packaging requires a prepared DLC directory; raw SQL and modinfo sources
+are not an installable payload.
 
 The coordinator's GitHub Actions workflow runs the version checks and the
 coordinator, shared compatibility, and WSDLC tests. A manual workflow run can

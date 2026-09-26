@@ -36,24 +36,17 @@ specific commit. Its checks confirm that both mods use the selected compatibilit
 revision and that WSDLC expects the same binary interface. Component updates
 are included by changing these pointers and checking the new combination.
 
-## Where the project is heading
+## Development goals
 
-The goal is to install and update either Mac GameCore through WSDLC without
-manually replacing game files. Remaining work includes preparing VP's DLC
-package, testing normal gameplay, saves, and multiplayer, and publishing
-GameCore packages that WSDLC can download and verify. Larger and unusually
-shaped maps also need further testing.
+- Produce complete macOS GameCore releases with matching DLC content, source
+  revisions, and verified hashes.
+- Extend test coverage for gameplay, saves, multiplayer, and large or unusually
+  shaped maps.
+- Add validated GameCore releases to WSDLC's download and update workflow.
 
 ## Working with the source
 
-The selected VP commit is still unavailable on GitHub, so a complete checkout
-currently needs the local repositories:
-
-```sh
-python3 scripts/bootstrap.py --local-root /path/to/existing/repositories
-python3 scripts/check_workspace.py
-```
-
-See the [workspace guide](docs/workspace.md) for setup, builds, and version updates.
+See the [developer guide](docs/workspace.md) for requirements, submodule setup,
+build commands, tests, and the contribution workflow.
 The GameCores target Aspyr's Intel macOS Steam release and run through Rosetta 2
 on Apple Silicon. WSDLC has separate Apple Silicon and Intel executables.
